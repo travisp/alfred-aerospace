@@ -1,0 +1,36 @@
+name: Release Alfred Workflow
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure script permissions
+        run: chmod +x workflow/scripts/*.py
+
+      - name: Build workflow bundle
+        working-directory: workflow
+        run: zip -r ../AeroSpace.alfredworkflow .
+
+      - name: Upload release asset
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: AeroSpace.alfredworkflow
+
+      - name: Upload workflow artifact
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AeroSpace.alfredworkflow
+          path: AeroSpace.alfredworkflow
