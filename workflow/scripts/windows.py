@@ -95,7 +95,9 @@ def main() -> None:
     if not query:
         query = sys.stdin.read().strip()
     scope_arg = sys.argv[2] if len(sys.argv) > 2 else ""
-    scope = scope_arg.lower() if scope_arg else os.environ.get("scope", "focused").lower()
+    env_scope = os.environ.get("scope", "").lower()
+    default_scope = os.environ.get("DEFAULT_WORKSPACE", "focused").lower()
+    scope = scope_arg.lower() if scope_arg else (env_scope or default_scope)
     if scope not in {"focused", "all"}:
         scope = "focused"
 

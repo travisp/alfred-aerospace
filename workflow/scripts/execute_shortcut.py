@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib.aerospace import execute_shortcut
+from lib.aerospace import display_notification, execute_shortcut
 
 
 def main() -> None:
@@ -21,6 +21,7 @@ def main() -> None:
         raise SystemExit(1) from exc
     if output:
         print(output)
+        display_notification(output)
 
 
 if __name__ == "__main__":

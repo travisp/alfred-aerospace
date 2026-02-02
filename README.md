@@ -21,6 +21,10 @@ Alfred workflow that mirrors the AeroSpace Raycast extension. It lists shortcuts
 1) Download the latest `AeroSpace.alfredworkflow` from Releases.
 2) Double-click to import into Alfred.
 
+## Configuration
+
+- **Default Workspace**: choose focused or all workspaces for `asw` in the workflow settings.
+
 ## Usage
 
 - `as` — list AeroSpace shortcuts.

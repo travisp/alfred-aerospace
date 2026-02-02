@@ -81,9 +81,9 @@
 	<key>name</key>
 	<string>AeroSpace</string>
 	<key>version</key>
-	<string>1.0.0</string>
+	<string>1.1.0</string>
 	<key>versioninfo</key>
-	<string>Initial release.</string>
+	<string>Add default workspace preference and notifications.</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -469,7 +469,34 @@ asw-focused - windows in focused workspace</string>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
-	<array/>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>focused</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>Focused workspace</string>
+						<string>focused</string>
+					</array>
+					<array>
+						<string>All workspaces</string>
+						<string>all</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Default scope for asw.</string>
+			<key>label</key>
+			<string>Default Workspace</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>DEFAULT_WORKSPACE</string>
+		</dict>
+	</array>
 	<key>webaddress</key>
 	<string>https://github.com/travisp/alfred-aerospace</string>
 </dict>

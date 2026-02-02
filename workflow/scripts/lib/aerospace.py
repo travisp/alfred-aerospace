@@ -286,6 +286,22 @@ def run_applescript(script: str) -> str:
     return result.stdout.strip()
 
 
+def display_notification(message: str, title: str = "AeroSpace") -> None:
+    if not message:
+        return
+    script = (
+        "display notification \""
+        + _escape_applescript(message)
+        + "\" with title \""
+        + _escape_applescript(title)
+        + "\""
+    )
+    try:
+        subprocess.run(["osascript", "-e", script], check=False)
+    except Exception:  # pylint: disable=broad-except
+        return
+
+
 def execute_shortcut(shortcut: str) -> str:
     script = build_applescript(shortcut)
     return run_applescript(script)
