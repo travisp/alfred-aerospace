@@ -38,21 +38,56 @@ def _save_cache(path: Path, windows: list) -> None:
         return
 
 
+def _fuzzy_score(needle: str, haystack: str) -> int | None:
+    if not needle or not haystack:
+        return None
+    needle = needle.lower()
+    haystack = haystack.lower()
+
+    if needle == haystack:
+        return 1000
+    if haystack.startswith(needle):
+        return 700 - len(haystack)
+    if needle in haystack:
+        return 500 - haystack.index(needle)
+
+    score = 0
+    h_idx = 0
+    consecutive = 0
+    for ch in needle:
+        found = haystack.find(ch, h_idx)
+        if found == -1:
+            return None
+        if found == h_idx:
+            consecutive += 1
+            score += 3 + consecutive
+        else:
+            consecutive = 0
+            score += 1
+        h_idx = found + 1
+
+    score -= max(0, h_idx - len(needle))
+    return score
+
+
 def _filter_windows(windows: list, query: str) -> list:
     if not query:
         return windows
     query = query.lower()
-    app_matches = []
-    title_matches = []
-    for window in windows:
-        app_name = str(window.get("app-name", "")).lower()
-        if app_name.startswith(query):
-            app_matches.append(window)
+    ranked: list[tuple[int, int, int, dict]] = []
+    for idx, window in enumerate(windows):
+        app_name = str(window.get("app-name", ""))
+        window_title = str(window.get("window-title", ""))
+        app_score = _fuzzy_score(query, app_name)
+        if app_score is not None:
+            ranked.append((0, -app_score, idx, window))
             continue
-        window_title = str(window.get("window-title", "")).lower()
-        if window_title.startswith(query):
-            title_matches.append(window)
-    return app_matches + title_matches
+        title_score = _fuzzy_score(query, window_title)
+        if title_score is not None:
+            ranked.append((1, -title_score, idx, window))
+
+    ranked.sort()
+    return [entry[3] for entry in ranked]
 
 
 def main() -> None:
@@ -123,7 +158,9 @@ def main() -> None:
         }
         app_path = window.get("app-path")
         if app_path:
-            item["icon"] = {"path": app_path}
+            path = Path(str(app_path))
+            if path.exists():
+                item["icon"] = {"type": "fileicon", "path": str(path)}
         items.append(item)
 
     print(json.dumps({"items": items}))
