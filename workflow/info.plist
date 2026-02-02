@@ -73,13 +73,17 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>OpenCode</string>
+	<string>travisp</string>
 	<key>description</key>
 	<string>Alfred workflow for AeroSpace shortcuts and window switching.</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
 	<string>AeroSpace</string>
+	<key>version</key>
+	<string>1.0.0</string>
+	<key>versioninfo</key>
+	<string>Initial release.</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -467,6 +471,6 @@ asw-focused - windows in focused workspace</string>
 	<key>userconfigurationconfig</key>
 	<array/>
 	<key>webaddress</key>
-	<string></string>
+	<string>https://github.com/travisp/alfred-aerospace</string>
 </dict>
 </plist>
