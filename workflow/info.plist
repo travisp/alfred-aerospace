@@ -81,9 +81,9 @@
 	<key>name</key>
 	<string>AeroSpace</string>
 	<key>version</key>
-	<string>1.1.0</string>
+	<string>1.2.0</string>
 	<key>versioninfo</key>
-	<string>Add default workspace preference and notifications.</string>
+	<string>Add notification toggle and default workspace preference.</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -414,58 +414,58 @@ asw-focused - windows in focused workspace</string>
 		<key>3B04D51D-052C-4B16-8CED-5DB43B364694</key>
 		<dict>
 			<key>xpos</key>
-			<real>305</real>
+			<real>320</real>
 			<key>ypos</key>
-			<real>530</real>
+			<real>200</real>
 		</dict>
 		<key>53A21105-D943-4ECF-B0C3-08E59EC5F01F</key>
 		<dict>
 			<key>xpos</key>
-			<real>60</real>
+			<real>80</real>
 			<key>ypos</key>
-			<real>1375</real>
+			<real>840</real>
 		</dict>
 		<key>72FA3CF2-0EB7-400A-BBFF-2B59583BCD7C</key>
 		<dict>
 			<key>xpos</key>
-			<real>65</real>
+			<real>80</real>
 			<key>ypos</key>
-			<real>905</real>
+			<real>520</real>
 		</dict>
 		<key>9C57C784-36D3-4D28-9C15-18F4F38F3B89</key>
 		<dict>
 			<key>xpos</key>
-			<real>305</real>
+			<real>320</real>
 			<key>ypos</key>
-			<real>910</real>
+			<real>680</real>
 		</dict>
 		<key>C8C995D1-5B3A-4FF5-A3EE-E3D0650EB829</key>
 		<dict>
 			<key>xpos</key>
-			<real>70</real>
+			<real>80</real>
 			<key>ypos</key>
-			<real>1070</real>
+			<real>680</real>
 		</dict>
 		<key>D6E714B5-C77F-4E14-B7BA-D70194C87050</key>
 		<dict>
 			<key>xpos</key>
-			<real>65</real>
+			<real>80</real>
 			<key>ypos</key>
-			<real>715</real>
+			<real>350</real>
 		</dict>
 		<key>E525FB03-3975-4C69-A58E-8AFC1681FC12</key>
 		<dict>
 			<key>xpos</key>
-			<real>295</real>
+			<real>320</real>
 			<key>ypos</key>
-			<real>720</real>
+			<real>350</real>
 		</dict>
 		<key>E8EB08C6-0B53-4CC3-ADD9-135F10DFEFA7</key>
 		<dict>
 			<key>xpos</key>
-			<real>75</real>
+			<real>80</real>
 			<key>ypos</key>
-			<real>525</real>
+			<real>200</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
@@ -495,6 +495,25 @@ asw-focused - windows in focused workspace</string>
 			<string>popupbutton</string>
 			<key>variable</key>
 			<string>DEFAULT_WORKSPACE</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<true/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string>Show a notification after executing a shortcut</string>
+			</dict>
+			<key>description</key>
+			<string>Displays a macOS notification after executing a shortcut.</string>
+			<key>label</key>
+			<string>Notifications</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>ENABLE_NOTIFICATIONS</string>
 		</dict>
 	</array>
 	<key>webaddress</key>

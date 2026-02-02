@@ -15,6 +15,7 @@ Alfred workflow that mirrors the AeroSpace Raycast extension. It lists shortcuts
 - AeroSpace installed and available on PATH.
 - Python 3.11+ (uses `tomllib`).
 - macOS Accessibility permission for Alfred (required for shortcut execution).
+- Notifications permission for Alfred if you enable notifications.
 
 ## Install
 
@@ -24,6 +25,7 @@ Alfred workflow that mirrors the AeroSpace Raycast extension. It lists shortcuts
 ## Configuration
 
 - **Default Workspace**: choose focused or all workspaces for `asw` in the workflow settings.
+- **Notifications**: toggle notifications after shortcut execution (System Settings > Notifications > Alfred).
 
 ## Usage
 

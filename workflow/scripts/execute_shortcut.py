@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import sys
 from pathlib import Path
 
@@ -14,6 +15,8 @@ def main() -> None:
         shortcut = sys.stdin.read().strip()
     if not shortcut:
         return
+    notifications = os.environ.get("ENABLE_NOTIFICATIONS", "true").strip().lower()
+    notifications_enabled = notifications in {"1", "true", "yes", "on"}
     try:
         output = execute_shortcut(shortcut)
     except Exception as exc:  # pylint: disable=broad-except
@@ -21,7 +24,8 @@ def main() -> None:
         raise SystemExit(1) from exc
     if output:
         print(output)
-        display_notification(output)
+        if notifications_enabled:
+            display_notification(output)
 
 
 if __name__ == "__main__":
