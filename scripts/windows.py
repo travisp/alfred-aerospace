@@ -138,17 +138,31 @@ def main() -> None:
         workspace = str(window.get("workspace", "")).strip()
         monitor = str(window.get("monitor-name", "")).strip()
         context_parts = []
-        if workspace:
-            context_parts.append(f"ws {workspace}")
+        if scope == "all":
+            if workspace:
+                context_parts.append(f"ws {workspace}")
+            else:
+                context_parts.append("ws ?")
+        else:
+            if workspace:
+                context_parts.append(f"ws {workspace}")
         if monitor:
             context_parts.append(monitor)
 
-        subtitle_parts = []
-        if window_title:
-            subtitle_parts.append(window_title)
-        if context_parts:
-            subtitle_parts.append(" | ".join(context_parts))
-        subtitle = " - ".join(subtitle_parts)
+        if scope == "all":
+            if context_parts and window_title:
+                subtitle = f"{' | '.join(context_parts)} - {window_title}"
+            elif context_parts:
+                subtitle = " | ".join(context_parts)
+            else:
+                subtitle = window_title
+        else:
+            subtitle_parts = []
+            if window_title:
+                subtitle_parts.append(window_title)
+            if context_parts:
+                subtitle_parts.append(" | ".join(context_parts))
+            subtitle = " - ".join(subtitle_parts)
 
         item: dict[str, Any] = {
             "title": app_name,
