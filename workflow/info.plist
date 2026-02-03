@@ -563,15 +563,31 @@
 	</dict>
 	</array>
 	<key>readme</key>
-	<string>Keywords:
+	<string>## AeroSpace Alfred Workflow
 
-as - list shortcuts
-ascfg - open AeroSpace config
-asw - windows in focused workspace
-asw-all - windows in all workspaces
-asw-focused - windows in focused workspace
-asws - workspace overview
-asfocused - focused window details</string>
+### Overview
+- List AeroSpace shortcuts and execute them
+- Switch windows in focused or all workspaces
+- Workspace overview and focused window layout actions
+
+### Requirements
+- Alfred 5 Powerpack
+- AeroSpace CLI available on PATH
+- Accessibility permission for Alfred
+
+### Configuration
+- Default Workspace (focused/all)
+- Notifications toggle
+- Keywords are configurable in workflow settings
+
+### Default Keywords
+- as: shortcuts
+- ascfg: config
+- asw: windows (default scope)
+- asw-all: windows (all)
+- asw-focused: windows (focused)
+- asws: workspace overview
+- asfocused: focused window details</string>
 	<key>uidata</key>
 	<dict>
 		<key>3B04D51D-052C-4B16-8CED-5DB43B364694</key>
