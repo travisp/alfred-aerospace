@@ -8,6 +8,7 @@ Alfred workflow that mirrors the AeroSpace Raycast extension. It lists shortcuts
 - Show and open the active AeroSpace config file.
 - Switch windows in the focused workspace or across all workspaces.
 - Window list shows workspace/monitor context and app icons.
+- Workspace overview and focused window details with layout actions.
 
 ## Requirements
 
