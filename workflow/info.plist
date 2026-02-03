@@ -81,9 +81,9 @@
 	<key>name</key>
 	<string>AeroSpace</string>
 	<key>version</key>
-	<string>1.2.0</string>
+	<string>1.0</string>
 	<key>versioninfo</key>
-	<string>Add notification toggle and default workspace preference.</string>
+	<string>Unreleased.</string>
 	<key>objects</key>
 	<array>
 		<dict>
