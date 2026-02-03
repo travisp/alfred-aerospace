@@ -565,20 +565,12 @@
 	<key>readme</key>
 	<string>## AeroSpace Alfred Workflow
 
-### Overview
-- List AeroSpace shortcuts and execute them
-- Switch windows in focused or all workspaces
-- Workspace overview and focused window layout actions
+### Setup
+- Install AeroSpace: https://github.com/nikitabobko/AeroSpace
+- Grant Alfred Accessibility permission for shortcut execution
 
-### Requirements
-- Alfred 5 Powerpack
-- AeroSpace CLI available on PATH
-- Accessibility permission for Alfred
-
-### Configuration
-- Default Workspace (focused/all)
-- Notifications toggle
-- Keywords are configurable in workflow settings
+### Usage
+- Search and execute shortcuts via the `as` keyword (configurable)
 
 ### Default Keywords
 - as: shortcuts
@@ -587,7 +579,12 @@
 - asw-all: windows (all)
 - asw-focused: windows (focused)
 - asws: workspace overview
-- asfocused: focused window details</string>
+- asfocused: focused window details
+
+### Configuration
+- Default Workspace (focused/all)
+- Notifications toggle
+- Keywords are configurable in workflow settings</string>
 	<key>uidata</key>
 	<dict>
 		<key>3B04D51D-052C-4B16-8CED-5DB43B364694</key>
@@ -700,7 +697,7 @@
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<true/>
+				<false/>
 				<key>required</key>
 				<false/>
 				<key>text</key>
