@@ -9,16 +9,31 @@ Install [AeroSpace](https://github.com/nikitabobko/AeroSpace) and grant Alfred A
 ## Usage
 
 Search and execute AeroSpace shortcuts (keyword is configurable in workflow settings) via the `as` keyword.
-![Shortcuts list](images/as.png)
+
+Commands (keywords are configurable):
+
+- `as` — list shortcuts
+- `ascfg` — open config
+- `asw` — windows (default scope)
+- `asw-all` — windows (all)
+- `asw-focused` — windows (focused)
+- `asws` — workspace overview
+- `asfocused` — focused window details
+
+![Shortcuts list](images/small/as.png)
 
 Alternatively, switch windows in the focused workspace via the `asw-focused` keyword.
-![Focused workspace windows](images/asw-focused.png)
+![Focused workspace windows](images/small/asw-focused.png)
+
+Alternatively, switch windows using the default scope via the `asw` keyword.
+
+Alternatively, switch windows across all workspaces via the `asw-all` keyword.
 
 Alternatively, browse workspaces and their windows via the `asws` keyword.
-![Workspace overview](images/asws.png)
+![Workspace overview](images/small/asws.png)
 
 Alternatively, inspect the focused window and change layout via the `asfocused` keyword.
-![Focused window details](images/asfocused.png)
+![Focused window details](images/small/asfocused.png)
 
 ## Workflow’s Configuration
 
