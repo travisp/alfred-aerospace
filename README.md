@@ -13,33 +13,33 @@ Search and execute AeroSpace shortcuts (keyword is configurable in workflow sett
 Commands (keywords are configurable):
 
 - `as` — list shortcuts
-- `ascfg` — open config
-- `asw` — windows (default scope)
-- `asw-all` — windows (all)
-- `asw-focused` — windows (focused)
+- `ascfg` — open the config file
+- `asw` — switch windows (default scope)
+- `asw-all` — switch windows (all workspaces)
+- `asw-focused` — switch windows (focused workspace)
 - `asws` — workspace overview
-- `asfocused` — focused window details
+- `asfocused` — focused window details and layout actions
 
-<img src="images/as.png" alt="Shortcuts list" width="800" />
+<img src="images/as.png" alt="Shortcuts list" width="400" />
 
-Alternatively, switch windows in the focused workspace via the `asw-focused` keyword.
-<img src="images/asw-focused.png" alt="Focused workspace windows" width="800" />
+Switch windows in the focused workspace via the `asw-focused` keyword.
+<img src="images/asw-focused.png" alt="Focused workspace windows" width="400" />
 
-Alternatively, switch windows using the default scope via the `asw` keyword.
+Switch windows using the default scope via the `asw` keyword.
 
-Alternatively, switch windows across all workspaces via the `asw-all` keyword.
+Switch windows across all workspaces via the `asw-all` keyword.
 
-Alternatively, browse workspaces and their windows via the `asws` keyword.
-<img src="images/asws.png" alt="Workspace overview" width="800" />
+Browse workspaces and their windows via the `asws` keyword.
+<img src="images/asws.png" alt="Workspace overview" width="400" />
 
-Alternatively, inspect the focused window and change layout via the `asfocused` keyword.
-<img src="images/asfocused.png" alt="Focused window details" width="800" />
+Inspect the focused window and change layout via the `asfocused` keyword.
+<img src="images/asfocused.png" alt="Focused window details" width="400" />
 
 ## Workflow’s Configuration
 
-- Default Workspace: choose focused or all workspaces for `asw`.
+- Default Workspace: set the default scope for `asw`.
 - Notifications: toggle notifications after shortcut execution.
-- Keywords: all keywords are configurable in workflow settings.
+- Keywords: update any keyword in workflow settings.
 
 ## Notes
 
