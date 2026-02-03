@@ -128,7 +128,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>as</string>
+				<string>{var:KEYWORD_SHORTCUTS}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -202,7 +202,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>ascfg</string>
+				<string>{var:KEYWORD_CONFIG}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -276,7 +276,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>asw</string>
+				<string>{var:KEYWORD_WINDOWS}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -350,7 +350,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>asw-all</string>
+				<string>{var:KEYWORD_WINDOWS_ALL}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -401,7 +401,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>asw-focused</string>
+				<string>{var:KEYWORD_WINDOWS_FOCUSED}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -475,7 +475,7 @@
 			<key>escaping</key>
 			<integer>0</integer>
 			<key>keyword</key>
-			<string>asfocused</string>
+			<string>{var:KEYWORD_FOCUSED}</string>
 			<key>queuedelaycustom</key>
 			<integer>3</integer>
 			<key>queuedelayimmediatelyinitially</key>
@@ -526,7 +526,7 @@
 			<key>escaping</key>
 			<integer>0</integer>
 			<key>keyword</key>
-			<string>asws</string>
+			<string>{var:KEYWORD_WORKSPACES}</string>
 			<key>queuedelaycustom</key>
 			<integer>3</integer>
 			<key>queuedelayimmediatelyinitially</key>
@@ -698,6 +698,153 @@ asfocused - focused window details</string>
 			<string>checkbox</string>
 			<key>variable</key>
 			<string>ENABLE_NOTIFICATIONS</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>as</string>
+				<key>placeholder</key>
+				<string>as</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Keyword for listing AeroSpace shortcuts.</string>
+			<key>label</key>
+			<string>Shortcuts Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>KEYWORD_SHORTCUTS</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>ascfg</string>
+				<key>placeholder</key>
+				<string>ascfg</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Keyword for opening the AeroSpace config.</string>
+			<key>label</key>
+			<string>Config Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>KEYWORD_CONFIG</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>asw</string>
+				<key>placeholder</key>
+				<string>asw</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Keyword for switching windows (default scope).</string>
+			<key>label</key>
+			<string>Windows Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>KEYWORD_WINDOWS</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>asw-all</string>
+				<key>placeholder</key>
+				<string>asw-all</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Keyword for switching windows across all workspaces.</string>
+			<key>label</key>
+			<string>Windows (All) Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>KEYWORD_WINDOWS_ALL</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>asw-focused</string>
+				<key>placeholder</key>
+				<string>asw-focused</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Keyword for switching windows in the focused workspace.</string>
+			<key>label</key>
+			<string>Windows (Focused) Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>KEYWORD_WINDOWS_FOCUSED</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>asws</string>
+				<key>placeholder</key>
+				<string>asws</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Keyword for the workspace overview.</string>
+			<key>label</key>
+			<string>Workspaces Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>KEYWORD_WORKSPACES</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>asfocused</string>
+				<key>placeholder</key>
+				<string>asfocused</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Keyword for focused window details.</string>
+			<key>label</key>
+			<string>Focused Window Keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>KEYWORD_FOCUSED</string>
 		</dict>
 	</array>
 	<key>webaddress</key>

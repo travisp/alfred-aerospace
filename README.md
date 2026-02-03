@@ -27,6 +27,7 @@ Alfred workflow that mirrors the AeroSpace Raycast extension. It lists shortcuts
 
 - **Default Workspace**: choose focused or all workspaces for `asw` in the workflow settings.
 - **Notifications**: toggle notifications after shortcut execution (System Settings > Notifications > Alfred).
+- **Keywords**: all keywords are configurable in workflow settings.
 
 ## Usage
 
