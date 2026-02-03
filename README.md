@@ -35,6 +35,8 @@ Alfred workflow that mirrors the AeroSpace Raycast extension. It lists shortcuts
 - `asw` — windows in focused workspace.
 - `asw-all` — windows in all workspaces.
 - `asw-focused` — windows in focused workspace.
+- `asws` — workspace overview (grouped windows).
+- `asfocused` — focused window details + layout actions.
 
 ## Troubleshooting
 

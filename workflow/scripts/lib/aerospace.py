@@ -156,6 +156,19 @@ WINDOWS_FORMAT = (
     "%{workspace} %{app-bundle-id} %{monitor-name}"
 )
 
+FOCUSED_WINDOW_FORMAT = (
+    "%{app-name} %{window-title} %{window-id} %{app-pid} %{workspace} "
+    "%{app-bundle-id} %{monitor-name} %{window-layout} "
+    "%{window-parent-container-layout} %{workspace-root-container-layout} "
+    "%{window-is-fullscreen} %{workspace-is-focused} %{workspace-is-visible} "
+    "%{monitor-is-main}"
+)
+
+WORKSPACES_FORMAT = (
+    "%{workspace} %{monitor-name} %{workspace-is-focused} "
+    "%{workspace-is-visible} %{workspace-root-container-layout} %{monitor-is-main}"
+)
+
 _app_path_cache: Dict[str, Optional[str]] = {}
 
 
@@ -353,5 +366,48 @@ def list_windows(scope: str) -> List[Dict[str, Any]]:
     return windows
 
 
+def get_focused_window() -> Optional[Dict[str, Any]]:
+    output = _run_command(
+        [
+            "aerospace",
+            "list-windows",
+            "--focused",
+            "--json",
+            "--format",
+            FOCUSED_WINDOW_FORMAT,
+        ]
+    )
+    windows = json.loads(output)
+    if not isinstance(windows, list) or not windows:
+        return None
+
+    window = windows[0]
+    bundle_id = window.get("app-bundle-id")
+    if isinstance(bundle_id, str):
+        window["app-path"] = get_app_path(bundle_id)
+    return window
+
+
+def list_workspaces() -> List[Dict[str, Any]]:
+    output = _run_command(
+        [
+            "aerospace",
+            "list-workspaces",
+            "--all",
+            "--json",
+            "--format",
+            WORKSPACES_FORMAT,
+        ]
+    )
+    workspaces = json.loads(output)
+    if not isinstance(workspaces, list):
+        return []
+    return workspaces
+
+
 def focus_window(window_id: str) -> None:
     _run_command(["aerospace", "focus", "--window-id", str(window_id)])
+
+
+def set_layout(layout: str) -> None:
+    _run_command(["aerospace", "layout", layout])
