@@ -10,20 +10,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lib.aerospace import get_focused_window
 
 
-LAYOUT_OPTIONS = [
-    "h_tiles",
-    "v_tiles",
-    "h_accordion",
-    "v_accordion",
-    "tiles",
-    "accordion",
-    "horizontal",
-    "vertical",
-    "tiling",
-    "floating",
-]
-
-
 def _file_icon(path_value: str | None) -> dict | None:
     if not path_value:
         return None

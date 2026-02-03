@@ -228,6 +228,58 @@ def normalize_description(value: Any) -> str:
     return re.sub(r"(?<=\w)-(?=\w)", " ", text)
 
 
+def fuzzy_score(needle: str, haystack: str) -> Optional[int]:
+    if not needle or not haystack:
+        return None
+    needle = needle.lower()
+    haystack = haystack.lower()
+
+    if needle == haystack:
+        return 1000
+    if haystack.startswith(needle):
+        return 700 - len(haystack)
+    if needle in haystack:
+        return 500 - haystack.index(needle)
+
+    score = 0
+    h_idx = 0
+    consecutive = 0
+    for ch in needle:
+        found = haystack.find(ch, h_idx)
+        if found == -1:
+            return None
+        if found == h_idx:
+            consecutive += 1
+            score += 3 + consecutive
+        else:
+            consecutive = 0
+            score += 1
+        h_idx = found + 1
+
+    score -= max(0, h_idx - len(needle))
+    return score
+
+
+def filter_windows(windows: List[Dict[str, Any]], query: str) -> List[Dict[str, Any]]:
+    if not query:
+        return windows
+    query = query.lower()
+    ranked: List[tuple[int, int, int, Dict[str, Any]]] = []
+    for idx, window in enumerate(windows):
+        app_name = str(window.get("app-name", ""))
+        window_title = str(window.get("window-title", ""))
+        app_score = fuzzy_score(query, app_name)
+        if app_score is not None:
+            ranked.append((0, -app_score, idx, window))
+            continue
+        title_score = fuzzy_score(query, window_title)
+        if title_score is not None:
+            ranked.append((1, -title_score, idx, window))
+
+    ranked.sort()
+    return [entry[3] for entry in ranked]
+
+
 def extract_shortcuts(config: Dict[str, Any]) -> List[Dict[str, str]]:
     shortcuts: List[Dict[str, str]] = []
     modes = config.get("mode", {})

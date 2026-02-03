@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib.aerospace import list_windows
+from lib.aerospace import filter_windows, list_windows
 
 
 def _cache_path(scope: str) -> Path | None:
@@ -38,66 +38,13 @@ def _save_cache(path: Path, windows: list) -> None:
         return
 
 
-def _fuzzy_score(needle: str, haystack: str) -> int | None:
-    if not needle or not haystack:
-        return None
-    needle = needle.lower()
-    haystack = haystack.lower()
-
-    if needle == haystack:
-        return 1000
-    if haystack.startswith(needle):
-        return 700 - len(haystack)
-    if needle in haystack:
-        return 500 - haystack.index(needle)
-
-    score = 0
-    h_idx = 0
-    consecutive = 0
-    for ch in needle:
-        found = haystack.find(ch, h_idx)
-        if found == -1:
-            return None
-        if found == h_idx:
-            consecutive += 1
-            score += 3 + consecutive
-        else:
-            consecutive = 0
-            score += 1
-        h_idx = found + 1
-
-    score -= max(0, h_idx - len(needle))
-    return score
-
-
-def _filter_windows(windows: list, query: str) -> list:
-    if not query:
-        return windows
-    query = query.lower()
-    ranked: list[tuple[int, int, int, dict]] = []
-    for idx, window in enumerate(windows):
-        app_name = str(window.get("app-name", ""))
-        window_title = str(window.get("window-title", ""))
-        app_score = _fuzzy_score(query, app_name)
-        if app_score is not None:
-            ranked.append((0, -app_score, idx, window))
-            continue
-        title_score = _fuzzy_score(query, window_title)
-        if title_score is not None:
-            ranked.append((1, -title_score, idx, window))
-
-    ranked.sort()
-    return [entry[3] for entry in ranked]
-
-
 def main() -> None:
     query = sys.argv[1] if len(sys.argv) > 1 else ""
     if not query:
         query = sys.stdin.read().strip()
-    scope_arg = sys.argv[2] if len(sys.argv) > 2 else ""
     env_scope = os.environ.get("scope", "").lower()
     default_scope = os.environ.get("DEFAULT_WORKSPACE", "focused").lower()
-    scope = scope_arg.lower() if scope_arg else (env_scope or default_scope)
+    scope = env_scope or default_scope
     if scope not in {"focused", "all"}:
         scope = "focused"
 
@@ -122,7 +69,7 @@ def main() -> None:
         if cache_file:
             _save_cache(cache_file, windows)
 
-    windows = _filter_windows(windows, query)
+    windows = filter_windows(windows, query)
     if not windows:
         items = [
             {

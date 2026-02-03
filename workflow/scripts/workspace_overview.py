@@ -7,59 +7,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib.aerospace import list_windows, list_workspaces
-
-
-def _fuzzy_score(needle: str, haystack: str) -> int | None:
-    if not needle or not haystack:
-        return None
-    needle = needle.lower()
-    haystack = haystack.lower()
-
-    if needle == haystack:
-        return 1000
-    if haystack.startswith(needle):
-        return 700 - len(haystack)
-    if needle in haystack:
-        return 500 - haystack.index(needle)
-
-    score = 0
-    h_idx = 0
-    consecutive = 0
-    for ch in needle:
-        found = haystack.find(ch, h_idx)
-        if found == -1:
-            return None
-        if found == h_idx:
-            consecutive += 1
-            score += 3 + consecutive
-        else:
-            consecutive = 0
-            score += 1
-        h_idx = found + 1
-
-    score -= max(0, h_idx - len(needle))
-    return score
-
-
-def _filter_windows(windows: list, query: str) -> list:
-    if not query:
-        return windows
-    query = query.lower()
-    ranked: list[tuple[int, int, int, dict]] = []
-    for idx, window in enumerate(windows):
-        app_name = str(window.get("app-name", ""))
-        window_title = str(window.get("window-title", ""))
-        app_score = _fuzzy_score(query, app_name)
-        if app_score is not None:
-            ranked.append((0, -app_score, idx, window))
-            continue
-        title_score = _fuzzy_score(query, window_title)
-        if title_score is not None:
-            ranked.append((1, -title_score, idx, window))
-
-    ranked.sort()
-    return [entry[3] for entry in ranked]
+from lib.aerospace import filter_windows, fuzzy_score, list_windows, list_workspaces
 
 
 def _window_item(window: dict, include_workspace: bool, include_monitor: bool = True) -> dict:
@@ -145,7 +93,7 @@ def main() -> None:
     if workspace_query and workspace_query in workspace_ids:
         windows_in_workspace = grouped.get(workspace_query, [])
         if filter_query:
-            windows_in_workspace = _filter_windows(windows_in_workspace, filter_query)
+            windows_in_workspace = filter_windows(windows_in_workspace, filter_query)
 
         ws_meta = next(
             (
@@ -218,10 +166,18 @@ def main() -> None:
         return
 
     items = []
+    if not cleaned:
+        items.append(
+            {
+                "title": "Type a workspace id to list its windows",
+                "subtitle": "Example: 2 or ws 2 chrome",
+                "valid": False,
+            }
+        )
     for ws in workspaces:
         workspace = str(ws.get("workspace", ""))
         if workspace_query:
-            score = _fuzzy_score(workspace_query, workspace)
+            score = fuzzy_score(workspace_query, workspace)
             if score is None:
                 continue
         monitor = str(ws.get("monitor-name", "")).strip()
