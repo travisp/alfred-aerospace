@@ -85,6 +85,11 @@ def main() -> None:
         return
 
     workspace_ids = {str(ws.get("workspace", "")) for ws in workspaces}
+    monitor_names = {
+        str(ws.get("monitor-name", "")).strip() for ws in workspaces
+    }
+    monitor_names.discard("")
+    show_monitor = len(monitor_names) > 1
     grouped: dict[str, list] = {}
     for window in windows:
         workspace = str(window.get("workspace", ""))
@@ -103,11 +108,7 @@ def main() -> None:
             ),
             None,
         )
-        layout = (
-            str(ws_meta.get("workspace-root-container-layout", "")).strip()
-            if ws_meta
-            else ""
-        )
+        monitor = str(ws_meta.get("monitor-name", "")).strip() if ws_meta else ""
         focused = (
             str(ws_meta.get("workspace-is-focused", "")).lower() == "true"
             if ws_meta
@@ -119,12 +120,7 @@ def main() -> None:
             else False
         )
 
-        state_parts = []
-        if focused:
-            state_parts.append("focused")
-        if visible and not focused:
-            state_parts.append("visible")
-        state = ", ".join(state_parts) if state_parts else "hidden"
+        state = "focused" if focused else ""
 
         app_names = []
         for window in windows_in_workspace:
@@ -138,15 +134,17 @@ def main() -> None:
             if len(app_names) > 3:
                 preview = f"{preview} +{len(app_names) - 3}"
 
-        subtitle_parts = [f"{len(windows_in_workspace)} windows", state]
-        if layout:
-            subtitle_parts.append(f"layout {layout}")
+        subtitle_parts = [f"{len(windows_in_workspace)} windows"]
+        if state:
+            subtitle_parts.append(state)
+        if show_monitor and monitor:
+            subtitle_parts.append(monitor)
         if preview:
             subtitle_parts.append(f"apps {preview}")
 
         items = [
             {
-                "title": f"Workspace {workspace_query}",
+                "title": f"Workspace {workspace_query}{' [focused]' if focused else ''}",
                 "subtitle": " | ".join(subtitle_parts),
                 "valid": False,
             }
@@ -181,16 +179,10 @@ def main() -> None:
             if score is None:
                 continue
         monitor = str(ws.get("monitor-name", "")).strip()
-        layout = str(ws.get("workspace-root-container-layout", "")).strip()
         focused = str(ws.get("workspace-is-focused", "")).lower() == "true"
         visible = str(ws.get("workspace-is-visible", "")).lower() == "true"
 
-        state_parts = []
-        if focused:
-            state_parts.append("focused")
-        if visible and not focused:
-            state_parts.append("visible")
-        state = ", ".join(state_parts) if state_parts else "hidden"
+        state = "focused" if focused else ""
 
         windows_in_workspace = grouped.get(workspace, [])
         window_count = len(windows_in_workspace)
@@ -207,17 +199,17 @@ def main() -> None:
             if len(app_names) > 3:
                 preview = f"{preview} +{len(app_names) - 3}"
 
-        subtitle_parts = [f"{window_count} windows", state]
-        if monitor:
+        subtitle_parts = [f"{window_count} windows"]
+        if state:
+            subtitle_parts.append(state)
+        if show_monitor and monitor:
             subtitle_parts.append(monitor)
-        if layout:
-            subtitle_parts.append(f"layout {layout}")
         if preview:
             subtitle_parts.append(f"apps {preview}")
 
         items.append(
             {
-                "title": f"Workspace {workspace}",
+                "title": f"Workspace {workspace}{' [focused]' if focused else ''}",
                 "subtitle": " | ".join(subtitle_parts),
                 "valid": False,
                 "autocomplete": f"{workspace} ",

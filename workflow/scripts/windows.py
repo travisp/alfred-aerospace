@@ -69,6 +69,10 @@ def main() -> None:
         if cache_file:
             _save_cache(cache_file, windows)
 
+    monitor_names = {str(window.get("monitor-name", "")).strip() for window in windows}
+    monitor_names.discard("")
+    show_monitor = len(monitor_names) > 1
+
     windows = filter_windows(windows, query)
     if not windows:
         items = [
@@ -95,7 +99,7 @@ def main() -> None:
         else:
             if workspace:
                 context_parts.append(f"ws {workspace}")
-        if monitor:
+        if show_monitor and monitor:
             context_parts.append(monitor)
 
         if scope == "all":
