@@ -20,20 +20,20 @@ Commands (keywords are configurable):
 - `asws` — workspace overview
 - `asfocused` — focused window details
 
-![Shortcuts list](images/small/as.png)
+<img src="images/as.png" alt="Shortcuts list" width="800" />
 
 Alternatively, switch windows in the focused workspace via the `asw-focused` keyword.
-![Focused workspace windows](images/small/asw-focused.png)
+<img src="images/asw-focused.png" alt="Focused workspace windows" width="800" />
 
 Alternatively, switch windows using the default scope via the `asw` keyword.
 
 Alternatively, switch windows across all workspaces via the `asw-all` keyword.
 
 Alternatively, browse workspaces and their windows via the `asws` keyword.
-![Workspace overview](images/small/asws.png)
+<img src="images/asws.png" alt="Workspace overview" width="800" />
 
 Alternatively, inspect the focused window and change layout via the `asfocused` keyword.
-![Focused window details](images/small/asfocused.png)
+<img src="images/asfocused.png" alt="Focused window details" width="800" />
 
 ## Workflow’s Configuration
 

@@ -109,7 +109,7 @@
 	<key>version</key>
 	<string>1.0</string>
 	<key>versioninfo</key>
-	<string>Unreleased.</string>
+	<string>Initial Forum Release</string>
 	<key>objects</key>
 	<array>
 		<dict>
