@@ -229,6 +229,17 @@ def normalize_description(value: Any) -> str:
     return re.sub(r"(?<=\w)-(?=\w)", " ", text)
 
 
+def shortcut_description(value: Any) -> str:
+    if (
+        isinstance(value, list)
+        and len(value) == 2
+        and all(isinstance(item, str) for item in value)
+        and value[1].strip().lower() == "mode main"
+    ):
+        return value[0].strip()
+    return normalize_description(value)
+
+
 def fuzzy_score(needle: str, haystack: str) -> Optional[int]:
     if not needle or not haystack:
         return None
@@ -298,7 +309,7 @@ def extract_shortcuts(config: Dict[str, Any]) -> List[Dict[str, str]]:
                 {
                     "mode": str(mode_name),
                     "shortcut": str(shortcut),
-                    "description": normalize_description(command),
+                    "description": shortcut_description(command),
                 }
             )
     return shortcuts
