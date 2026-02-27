@@ -107,9 +107,9 @@
 	<key>name</key>
 	<string>AeroSpace</string>
 	<key>version</key>
-	<string>1.0</string>
+	<string>1.0.1</string>
 	<key>versioninfo</key>
-	<string>Initial Forum Release</string>
+	<string>Add unbound command actions and simplify mode-main shortcut labels.</string>
 	<key>objects</key>
 	<array>
 		<dict>
