@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shlex
 import subprocess
 import tomllib
 from pathlib import Path
@@ -311,16 +312,12 @@ def parse_shortcut(shortcut: str) -> tuple[List[str], str]:
 
 
 def _escape_applescript(text: str) -> str:
-    return text.replace("\\", "\\\\").replace('"', "\\\"")
+    return text.replace("\\", "\\\\").replace('"', '\\"')
 
 
 def build_applescript(shortcut: str) -> str:
     modifiers, key = parse_shortcut(shortcut)
-    modifier_tokens = [
-        MODIFIER_MAP[mod]
-        for mod in modifiers
-        if mod in MODIFIER_MAP
-    ]
+    modifier_tokens = [MODIFIER_MAP[mod] for mod in modifiers if mod in MODIFIER_MAP]
     keycode = KEYCODE_MAP.get(key.lower())
     if keycode is not None:
         action = f"key code {keycode}"
@@ -332,9 +329,9 @@ def build_applescript(shortcut: str) -> str:
 
     modifier_label = " ".join(modifiers) if modifiers else "none"
     return (
-        "tell application \"System Events\"\n"
+        'tell application "System Events"\n'
         f"    {action}\n"
-        f"    return \"Executed: {shortcut}({modifier_label} - {key})\"\n"
+        f'    return "Executed: {shortcut}({modifier_label} - {key})"\n'
         "end tell"
     )
 
@@ -355,11 +352,11 @@ def display_notification(message: str, title: str = "AeroSpace") -> None:
     if not message:
         return
     script = (
-        "display notification \""
+        'display notification "'
         + _escape_applescript(message)
-        + "\" with title \""
+        + '" with title "'
         + _escape_applescript(title)
-        + "\""
+        + '"'
     )
     try:
         subprocess.run(["osascript", "-e", script], check=False)
@@ -370,6 +367,15 @@ def display_notification(message: str, title: str = "AeroSpace") -> None:
 def execute_shortcut(shortcut: str) -> str:
     script = build_applescript(shortcut)
     return run_applescript(script)
+
+
+def run_aerospace_command(command: str) -> str:
+    args = shlex.split(command.strip())
+    if not args:
+        raise RuntimeError("Command is empty.")
+
+    output = _run_command(["aerospace", *args])
+    return output.strip()
 
 
 def get_app_path(bundle_id: str) -> Optional[str]:
