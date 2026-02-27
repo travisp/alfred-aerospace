@@ -10,6 +10,19 @@ Install [AeroSpace](https://github.com/nikitabobko/AeroSpace) and grant Alfred A
 
 Search and execute AeroSpace shortcuts (keyword is configurable in workflow settings) via the `as` keyword.
 
+The `as` command also includes a small set of built-in AeroSpace actions when they are not bound in your config:
+
+- `balance-sizes`
+- `workspace-back-and-forth`
+- `flatten-workspace-tree`
+- `reload-config`
+- `fullscreen --no-outer-gaps`
+- `layout tiling floating`
+
+These entries are shown with the subtitle `no bound shortcut`.
+
+For bindings like `['flatten-workspace-tree', 'mode main']`, shortcut titles are simplified to show just the actionable command (`flatten-workspace-tree`).
+
 Commands (keywords are configurable):
 
 - `as` — list shortcuts
