@@ -107,9 +107,9 @@
 	<key>name</key>
 	<string>AeroSpace</string>
 	<key>version</key>
-	<string>1.0.1</string>
+	<string>1.1.0</string>
 	<key>versioninfo</key>
-	<string>Add unbound command actions and simplify mode-main shortcut labels.</string>
+	<string>Use AeroSpace trigger-binding for shortcut execution, show action errors, and unify local and CI workflow builds.</string>
 	<key>objects</key>
 	<array>
 		<dict>
