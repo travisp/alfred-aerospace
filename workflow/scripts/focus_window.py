@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib.aerospace import focus_window
+from lib.aerospace import focus_window, notify_error
 
 
 def main() -> None:
@@ -17,6 +17,7 @@ def main() -> None:
     try:
         focus_window(window_id)
     except Exception as exc:  # pylint: disable=broad-except
+        notify_error(str(exc))
         print(str(exc))
         raise SystemExit(1) from exc
 

@@ -1,10 +1,10 @@
 # AeroSpace Alfred Workflow
 
-Alfred workflow for the AeroSpace window manager. It lists shortcuts from your config, executes them via AppleScript, and provides window switching and workspace overview tools.
+Alfred workflow for the AeroSpace window manager. It lists shortcuts from your config, executes bound actions via the AeroSpace CLI, and provides window switching and workspace overview tools.
 
 ## Setup
 
-Install [AeroSpace](https://github.com/nikitabobko/AeroSpace) and grant Alfred Accessibility permission to allow shortcut execution.
+Install [AeroSpace](https://github.com/nikitabobko/AeroSpace).
 
 ## Usage
 
@@ -58,6 +58,20 @@ Inspect the focused window and change layout via the `asfocused` keyword.
 
 - AeroSpace CLI must be available on PATH.
 - Notifications require Alfred’s Notifications permission if enabled.
+
+## Development
+
+Rebuild the packaged workflow for local Alfred testing:
+
+```bash
+./build-workflow.sh
+```
+
+This writes [AeroSpace.alfredworkflow](/Users/travis/coding/utils/aerospace-alfred/workflow/AeroSpace.alfredworkflow). You can also pass a custom output path:
+
+```bash
+./build-workflow.sh /tmp/AeroSpace.alfredworkflow
+```
 
 ## Credits
 

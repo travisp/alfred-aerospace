@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib.aerospace import set_layout
+from lib.aerospace import notify_error, set_layout
 
 
 def main() -> None:
@@ -17,6 +17,7 @@ def main() -> None:
     try:
         set_layout(layout)
     except Exception as exc:  # pylint: disable=broad-except
+        notify_error(str(exc))
         print(str(exc))
         raise SystemExit(1) from exc
 
