@@ -81,7 +81,14 @@ def main() -> None:
             {
                 "title": title,
                 "subtitle": subtitle,
-                "arg": shortcut["shortcut"],
+                "arg": json.dumps(
+                    {
+                        "type": "binding",
+                        "binding": shortcut["shortcut"],
+                        "mode": shortcut["mode"],
+                    },
+                    separators=(",", ":"),
+                ),
                 "uid": f"shortcut:{shortcut['mode']}:{shortcut['shortcut']}",
                 "match": match_text,
             }
@@ -97,7 +104,10 @@ def main() -> None:
             {
                 "title": title,
                 "subtitle": subtitle,
-                "arg": f"command:{command}",
+                "arg": json.dumps(
+                    {"type": "command", "command": command},
+                    separators=(",", ":"),
+                ),
                 "uid": f"command:{command.replace(' ', '_')}",
                 "match": match_text,
             }

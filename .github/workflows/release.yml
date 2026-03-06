@@ -15,12 +15,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Ensure script permissions
-        run: chmod +x workflow/scripts/*.py
-
       - name: Build workflow bundle
-        working-directory: workflow
-        run: zip -r ../AeroSpace.alfredworkflow .
+        run: ./build-workflow.sh AeroSpace.alfredworkflow
 
       - name: Upload release asset
         if: github.event_name == 'release'
