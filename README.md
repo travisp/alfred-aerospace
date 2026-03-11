@@ -23,6 +23,8 @@ These entries are shown with the subtitle `no bound shortcut`.
 
 For bindings like `['flatten-workspace-tree', 'mode main']`, shortcut titles are simplified to show just the actionable command (`flatten-workspace-tree`).
 
+If you want a custom Alfred label for a binding, add `# alfred-name: Your Label` at the end of the binding line. For multiline TOML strings, put it on the closing line. Alfred will use that comment for the result title and search text while keeping the bound command unchanged. Add `# alfred-skip` in the same place to hide a binding from Alfred entirely.
+
 Commands (keywords are configurable):
 
 - `as` — list shortcuts

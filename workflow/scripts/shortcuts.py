@@ -61,7 +61,7 @@ def main() -> None:
         print(json.dumps({"items": items}))
         return
 
-    shortcuts = extract_shortcuts(result["config"])
+    shortcuts = extract_shortcuts(result["config"], result["text"])
     bound_commands = _bound_commands(result["config"])
     unbound_always_commands = [
         command
@@ -74,7 +74,9 @@ def main() -> None:
     for shortcut in shortcuts:
         title = shortcut["description"]
         subtitle = f"{shortcut['shortcut']} - mode: {shortcut['mode']}"
-        match_text = f"{title} {shortcut['shortcut']} {shortcut['mode']}"
+        match_text = (
+            f"{title} {shortcut['shortcut']} {shortcut['mode']} {shortcut['command']}"
+        )
         if query_lower and query_lower not in match_text.lower():
             continue
         items.append(

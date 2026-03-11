@@ -11,6 +11,8 @@ import tomllib
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from .alfred_metadata import extract_shortcut_metadata
+
 
 INSTALL_GUIDE_URL = "https://nikitabobko.github.io/AeroSpace/guide#installation"
 MISSING_CONFIG_MESSAGE = (
@@ -89,12 +91,12 @@ def load_config() -> Dict[str, Any]:
         return {"error": MISSING_CONFIG_MESSAGE, "path": path}
 
     try:
-        with open(path, "rb") as handle:
-            config = tomllib.load(handle)
+        raw_text = Path(path).read_text(encoding="utf-8")
+        config = tomllib.loads(raw_text)
     except Exception as exc:  # pylint: disable=broad-except
         return {"error": f"Failed to parse config: {exc}", "path": path}
 
-    return {"config": config, "path": path}
+    return {"config": config, "path": path, "text": raw_text}
 
 
 def normalize_description(value: Any) -> str:
@@ -166,11 +168,12 @@ def filter_windows(windows: List[Dict[str, Any]], query: str) -> List[Dict[str, 
     return [entry[3] for entry in ranked]
 
 
-def extract_shortcuts(config: Dict[str, Any]) -> List[Dict[str, str]]:
+def extract_shortcuts(config: Dict[str, Any], config_text: str) -> List[Dict[str, str]]:
     shortcuts: List[Dict[str, str]] = []
     modes = config.get("mode", {})
     if not isinstance(modes, dict):
         return shortcuts
+    shortcut_metadata = extract_shortcut_metadata(config_text)
 
     for mode_name, mode_config in modes.items():
         if not isinstance(mode_config, dict):
@@ -178,12 +181,20 @@ def extract_shortcuts(config: Dict[str, Any]) -> List[Dict[str, str]]:
         bindings = mode_config.get("binding", {})
         if not isinstance(bindings, dict):
             continue
+
+        mode = str(mode_name)
         for shortcut, command in bindings.items():
+            binding = str(shortcut)
+            metadata = shortcut_metadata.get((mode, binding), {})
+            if metadata.get("skip"):
+                continue
+            normalized_command = normalize_description(command)
             shortcuts.append(
                 {
-                    "mode": str(mode_name),
-                    "shortcut": str(shortcut),
-                    "description": shortcut_description(command),
+                    "mode": mode,
+                    "shortcut": binding,
+                    "description": metadata.get("name", shortcut_description(command)),
+                    "command": normalized_command,
                 }
             )
     return shortcuts
