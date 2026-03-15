@@ -107,9 +107,9 @@
 	<key>name</key>
 	<string>AeroSpace</string>
 	<key>version</key>
-	<string>1.1.0</string>
+	<string>1.2.0</string>
 	<key>versioninfo</key>
-	<string>Use AeroSpace trigger-binding for shortcut execution, show action errors, and unify local and CI workflow builds.</string>
+	<string>Add inline Alfred shortcut names, hide skipped bindings, and keep command text searchable.</string>
 	<key>objects</key>
 	<array>
 		<dict>

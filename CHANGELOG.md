@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.2.0
+
 - Added support for inline `# alfred-name: ...` binding comments so `as` can show custom searchable shortcut names instead of raw commands.
 - Added support for inline `# alfred-skip` binding comments to hide bindings from Alfred entirely.
 
