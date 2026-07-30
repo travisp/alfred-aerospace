@@ -69,7 +69,7 @@ Rebuild the packaged workflow for local Alfred testing:
 ./build-workflow.sh
 ```
 
-This writes [AeroSpace.alfredworkflow](/Users/travis/coding/utils/aerospace-alfred/workflow/AeroSpace.alfredworkflow). You can also pass a custom output path:
+This writes [AeroSpace.alfredworkflow](workflow/AeroSpace.alfredworkflow). You can also pass a custom output path:
 
 ```bash
 ./build-workflow.sh /tmp/AeroSpace.alfredworkflow
