@@ -46,9 +46,6 @@ WORKSPACES_FORMAT = (
     "%{workspace-is-visible} %{workspace-root-container-layout} %{monitor-is-main}"
 )
 
-_app_path_cache: Dict[str, Optional[str]] = {}
-
-
 def _ensure_path(env: Dict[str, str]) -> Dict[str, str]:
     current = env.get("PATH", "")
     parts = [p for p in current.split(os.pathsep) if p]
@@ -241,25 +238,20 @@ def run_aerospace_command(command: str) -> str:
     return output.strip()
 
 
-def get_app_path(bundle_id: str) -> Optional[str]:
-    if not bundle_id:
-        return None
-    if bundle_id in _app_path_cache:
-        return _app_path_cache[bundle_id]
-
+def _get_running_app_paths() -> Dict[str, str]:
+    """Resolve application bundle paths from one Launch Services snapshot."""
     try:
-        output = _run_command(
-            [
-                "mdfind",
-                f'kMDItemCFBundleIdentifier="{bundle_id}"',
-            ]
-        ).strip()
-    except Exception:  # pylint: disable=broad-except
-        output = ""
+        output = _run_command(["/usr/bin/lsappinfo", "list"])
+    except (OSError, RuntimeError, subprocess.TimeoutExpired):
+        return {}
 
-    app_path = output.splitlines()[0] if output else None
-    _app_path_cache[bundle_id] = app_path
-    return app_path
+    paths: Dict[str, str] = {}
+    for entry in re.split(r"^ *\d+\) ", output, flags=re.MULTILINE):
+        bundle_id = re.search(r'^\s+bundleID="(.+)" *$', entry, re.MULTILINE)
+        bundle_path = re.search(r'^\s+bundle path="(.+)" *$', entry, re.MULTILINE)
+        if bundle_id and bundle_path:
+            paths.setdefault(bundle_id[1], bundle_path[1])
+    return paths
 
 
 def list_windows(scope: str) -> List[Dict[str, Any]]:
@@ -277,13 +269,14 @@ def list_windows(scope: str) -> List[Dict[str, Any]]:
 
     output = _run_command(args)
     windows = json.loads(output)
-    if not isinstance(windows, list):
+    if not isinstance(windows, list) or not windows:
         return []
 
+    paths = _get_running_app_paths()
     for window in windows:
         bundle_id = window.get("app-bundle-id")
         if isinstance(bundle_id, str):
-            window["app-path"] = get_app_path(bundle_id)
+            window["app-path"] = paths.get(bundle_id)
     return windows
 
 
@@ -305,7 +298,7 @@ def get_focused_window() -> Optional[Dict[str, Any]]:
     window = windows[0]
     bundle_id = window.get("app-bundle-id")
     if isinstance(bundle_id, str):
-        window["app-path"] = get_app_path(bundle_id)
+        window["app-path"] = _get_running_app_paths().get(bundle_id)
     return window
 
 
