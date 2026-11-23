@@ -10,24 +10,38 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lib.aerospace import filter_windows, fuzzy_score, list_windows, list_workspaces
 
 
-def _window_item(window: dict, include_workspace: bool, include_monitor: bool = True) -> dict:
-    app_name = str(window.get("app-name", "Unknown"))
-    window_title = str(window.get("window-title", "")).strip()
-    workspace = str(window.get("workspace", "")).strip()
-    monitor = str(window.get("monitor-name", "")).strip()
+def _workspace_item(ws: dict, windows: list[dict], show_monitor: bool) -> dict:
+    workspace = str(ws.get("workspace", ""))
+    focused = str(ws.get("workspace-is-focused", "")).lower() == "true"
+    monitor = str(ws.get("monitor-name", "")).strip()
+    subtitle = [f"{len(windows)} windows"]
+    if focused:
+        subtitle.append("focused")
+    if show_monitor and monitor:
+        subtitle.append(monitor)
 
-    subtitle_parts = []
-    if include_workspace and workspace:
-        subtitle_parts.append(f"ws {workspace}")
-    if include_monitor and monitor:
-        subtitle_parts.append(monitor)
-    if window_title:
-        subtitle_parts.append(window_title)
+    app_names = []
+    for window in windows:
+        name = str(window.get("app-name", "")).strip()
+        if name and name not in app_names:
+            app_names.append(name)
+    if app_names:
+        preview = ", ".join(app_names[:3])
+        if len(app_names) > 3:
+            preview += f" +{len(app_names) - 3}"
+        subtitle.append(f"apps {preview}")
 
-    subtitle = " - ".join(subtitle_parts)
+    return {
+        "title": f"Workspace {workspace}{' [focused]' if focused else ''}",
+        "subtitle": " | ".join(subtitle),
+        "valid": False,
+    }
+
+
+def _window_item(window: dict) -> dict:
     item: dict[str, Any] = {
-        "title": app_name,
-        "subtitle": subtitle,
+        "title": str(window.get("app-name", "Unknown")),
+        "subtitle": str(window.get("window-title", "")).strip(),
         "arg": str(window.get("window-id", "")),
         "uid": f"window:{window.get('window-id', '')}",
     }
@@ -84,7 +98,7 @@ def main() -> None:
         print(json.dumps({"items": items}))
         return
 
-    workspace_ids = {str(ws.get("workspace", "")) for ws in workspaces}
+    workspaces_by_id = {str(ws.get("workspace", "")): ws for ws in workspaces}
     monitor_names = {
         str(ws.get("monitor-name", "")).strip() for ws in workspaces
     }
@@ -95,65 +109,17 @@ def main() -> None:
         workspace = str(window.get("workspace", ""))
         grouped.setdefault(workspace, []).append(window)
 
-    if workspace_query and workspace_query in workspace_ids:
-        windows_in_workspace = grouped.get(workspace_query, [])
-        if filter_query:
-            windows_in_workspace = filter_windows(windows_in_workspace, filter_query)
-
-        ws_meta = next(
-            (
-                ws
-                for ws in workspaces
-                if str(ws.get("workspace", "")) == workspace_query
-            ),
-            None,
+    if workspace_query and workspace_query in workspaces_by_id:
+        windows_in_workspace = filter_windows(
+            grouped.get(workspace_query, []), filter_query
         )
-        monitor = str(ws_meta.get("monitor-name", "")).strip() if ws_meta else ""
-        focused = (
-            str(ws_meta.get("workspace-is-focused", "")).lower() == "true"
-            if ws_meta
-            else False
-        )
-        visible = (
-            str(ws_meta.get("workspace-is-visible", "")).lower() == "true"
-            if ws_meta
-            else False
-        )
-
-        state = "focused" if focused else ""
-
-        app_names = []
-        for window in windows_in_workspace:
-            name = str(window.get("app-name", "")).strip()
-            if name and name not in app_names:
-                app_names.append(name)
-        preview = ""
-        if app_names:
-            preview_items = app_names[:3]
-            preview = ", ".join(preview_items)
-            if len(app_names) > 3:
-                preview = f"{preview} +{len(app_names) - 3}"
-
-        subtitle_parts = [f"{len(windows_in_workspace)} windows"]
-        if state:
-            subtitle_parts.append(state)
-        if show_monitor and monitor:
-            subtitle_parts.append(monitor)
-        if preview:
-            subtitle_parts.append(f"apps {preview}")
-
         items = [
-            {
-                "title": f"Workspace {workspace_query}{' [focused]' if focused else ''}",
-                "subtitle": " | ".join(subtitle_parts),
-                "valid": False,
-            }
+            _workspace_item(
+                workspaces_by_id[workspace_query], windows_in_workspace, show_monitor
+            )
         ]
-        items.extend(
-            _window_item(window, include_workspace=False, include_monitor=False)
-            for window in windows_in_workspace
-        )
-        if len(items) == 1:
+        items.extend(_window_item(window) for window in windows_in_workspace)
+        if not windows_in_workspace:
             items.append(
                 {
                     "title": f"No windows in workspace {workspace_query}",
@@ -172,49 +138,12 @@ def main() -> None:
                 "valid": False,
             }
         )
-    for ws in workspaces:
-        workspace = str(ws.get("workspace", ""))
-        if workspace_query:
-            score = fuzzy_score(workspace_query, workspace)
-            if score is None:
-                continue
-        monitor = str(ws.get("monitor-name", "")).strip()
-        focused = str(ws.get("workspace-is-focused", "")).lower() == "true"
-        visible = str(ws.get("workspace-is-visible", "")).lower() == "true"
-
-        state = "focused" if focused else ""
-
-        windows_in_workspace = grouped.get(workspace, [])
-        window_count = len(windows_in_workspace)
-
-        app_names = []
-        for window in windows_in_workspace:
-            name = str(window.get("app-name", "")).strip()
-            if name and name not in app_names:
-                app_names.append(name)
-        preview = ""
-        if app_names:
-            preview_items = app_names[:3]
-            preview = ", ".join(preview_items)
-            if len(app_names) > 3:
-                preview = f"{preview} +{len(app_names) - 3}"
-
-        subtitle_parts = [f"{window_count} windows"]
-        if state:
-            subtitle_parts.append(state)
-        if show_monitor and monitor:
-            subtitle_parts.append(monitor)
-        if preview:
-            subtitle_parts.append(f"apps {preview}")
-
-        items.append(
-            {
-                "title": f"Workspace {workspace}{' [focused]' if focused else ''}",
-                "subtitle": " | ".join(subtitle_parts),
-                "valid": False,
-                "autocomplete": f"{workspace} ",
-            }
-        )
+    for workspace, ws in workspaces_by_id.items():
+        if workspace_query and fuzzy_score(workspace_query, workspace) is None:
+            continue
+        item = _workspace_item(ws, grouped.get(workspace, []), show_monitor)
+        item["autocomplete"] = f"{workspace} "
+        items.append(item)
 
     if not items:
         items = [{"title": "No workspaces found", "valid": False}]

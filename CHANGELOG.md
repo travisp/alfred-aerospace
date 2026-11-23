@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Layout actions now target the window shown in Alfred even if focus has moved.
 - Sped up window switching, focused-window details, and workspace results by replacing per-app Spotlight searches with one batched icon lookup (#2).
 
 ## 1.2.0
