@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Sped up window switching, focused-window details, and workspace results by replacing per-app Spotlight searches with one batched icon lookup (#2).
+
 ## 1.2.0
 
 - Added support for inline `# alfred-name: ...` binding comments so `as` can show custom searchable shortcut names instead of raw commands.

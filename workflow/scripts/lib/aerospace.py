@@ -30,12 +30,12 @@ DEFAULT_PATHS = [
 
 WINDOWS_FORMAT = (
     "%{app-name} %{window-title} %{window-id} %{app-pid} "
-    "%{workspace} %{app-bundle-id} %{monitor-name}"
+    "%{workspace} %{monitor-name}"
 )
 
 FOCUSED_WINDOW_FORMAT = (
     "%{app-name} %{window-title} %{window-id} %{app-pid} %{workspace} "
-    "%{app-bundle-id} %{monitor-name} %{window-layout} "
+    "%{monitor-name} %{window-layout} "
     "%{window-parent-container-layout} %{workspace-root-container-layout} "
     "%{window-is-fullscreen} %{workspace-is-focused} %{workspace-is-visible} "
     "%{monitor-is-main}"
@@ -45,8 +45,6 @@ WORKSPACES_FORMAT = (
     "%{workspace} %{monitor-name} %{workspace-is-focused} "
     "%{workspace-is-visible} %{workspace-root-container-layout} %{monitor-is-main}"
 )
-
-_app_path_cache: Dict[str, Optional[str]] = {}
 
 
 def _ensure_path(env: Dict[str, str]) -> Dict[str, str]:
@@ -241,25 +239,29 @@ def run_aerospace_command(command: str) -> str:
     return output.strip()
 
 
-def get_app_path(bundle_id: str) -> Optional[str]:
-    if not bundle_id:
-        return None
-    if bundle_id in _app_path_cache:
-        return _app_path_cache[bundle_id]
+def _add_window_app_paths(windows: List[Dict[str, Any]]) -> None:
+    pids = {window["app-pid"] for window in windows}
+    if not pids:
+        return
 
+    # lsappinfo accepts multiple info queries in one invocation.
+    args = ["/usr/bin/lsappinfo"]
+    for pid in pids:
+        args.extend(["info", "-only", "pid,bundlepath", str(pid)])
     try:
-        output = _run_command(
-            [
-                "mdfind",
-                f'kMDItemCFBundleIdentifier="{bundle_id}"',
-            ]
-        ).strip()
-    except Exception:  # pylint: disable=broad-except
-        output = ""
+        output = _run_command(args, timeout=1)
+    except (OSError, RuntimeError, subprocess.TimeoutExpired):
+        return  # Icons are optional; keep the window results.
 
-    app_path = output.splitlines()[0] if output else None
-    _app_path_cache[bundle_id] = app_path
-    return app_path
+    paths: Dict[int, str] = {}
+    for record in output.split("\n\n"):
+        pid_match = re.search(r"^[ \t]+pid = (\d+)\b", record, re.MULTILINE)
+        path_match = re.search(r'^[ \t]+bundle path="(.+)"[ \t]*$', record, re.MULTILINE)
+        if pid_match and path_match:
+            paths[int(pid_match[1])] = path_match[1]
+
+    for window in windows:
+        window["app-path"] = paths.get(window["app-pid"])
 
 
 def list_windows(scope: str) -> List[Dict[str, Any]]:
@@ -275,15 +277,8 @@ def list_windows(scope: str) -> List[Dict[str, Any]]:
     else:
         args.extend(["--workspace", "focused"])
 
-    output = _run_command(args)
-    windows = json.loads(output)
-    if not isinstance(windows, list):
-        return []
-
-    for window in windows:
-        bundle_id = window.get("app-bundle-id")
-        if isinstance(bundle_id, str):
-            window["app-path"] = get_app_path(bundle_id)
+    windows = json.loads(_run_command(args))
+    _add_window_app_paths(windows)
     return windows
 
 
@@ -299,13 +294,11 @@ def get_focused_window() -> Optional[Dict[str, Any]]:
         ]
     )
     windows = json.loads(output)
-    if not isinstance(windows, list) or not windows:
+    if not windows:
         return None
 
     window = windows[0]
-    bundle_id = window.get("app-bundle-id")
-    if isinstance(bundle_id, str):
-        window["app-path"] = get_app_path(bundle_id)
+    _add_window_app_paths([window])
     return window
 
 
