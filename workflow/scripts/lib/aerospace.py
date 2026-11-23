@@ -41,10 +41,7 @@ FOCUSED_WINDOW_FORMAT = (
     "%{monitor-is-main}"
 )
 
-WORKSPACES_FORMAT = (
-    "%{workspace} %{monitor-name} %{workspace-is-focused} "
-    "%{workspace-is-visible} %{workspace-root-container-layout} %{monitor-is-main}"
-)
+WORKSPACES_FORMAT = "%{workspace} %{monitor-name} %{workspace-is-focused}"
 
 
 def _ensure_path(env: Dict[str, str]) -> Dict[str, str]:
@@ -323,5 +320,5 @@ def focus_window(window_id: str) -> None:
     _run_command(["aerospace", "focus", "--window-id", str(window_id)])
 
 
-def set_layout(layout: str) -> None:
-    _run_command(["aerospace", "layout", layout])
+def set_layout(window_id: int, layout: str) -> None:
+    _run_command(["aerospace", "layout", "--window-id", str(window_id), layout])

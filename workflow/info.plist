@@ -107,9 +107,9 @@
 	<key>name</key>
 	<string>AeroSpace</string>
 	<key>version</key>
-	<string>1.2.0</string>
+	<string>1.3.0</string>
 	<key>versioninfo</key>
-	<string>Add inline Alfred shortcut names, hide skipped bindings, and keep command text searchable.</string>
+	<string>Speed up window icon lookups and apply layout changes to the window shown in Alfred.</string>
 	<key>objects</key>
 	<array>
 		<dict>

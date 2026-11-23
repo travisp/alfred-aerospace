@@ -118,25 +118,19 @@ def main() -> None:
         header_item["icon"] = icon
     items.append(header_item)
 
+    window_id = window["window-id"]
     current_layout = window_layout
     layout_actions = []
     filter_query = _normalize_query(query)
 
-    toggle_action = None
-    if current_layout == "floating":
-        toggle_action = {
-            "title": "Set layout: tiling",
-            "subtitle": "Switch from floating",
-            "arg": "tiling",
-            "autocomplete": "tiling",
-        }
-    else:
-        toggle_action = {
-            "title": "Set layout: floating",
-            "subtitle": "Switch from tiling",
-            "arg": "floating",
-            "autocomplete": "floating",
-        }
+    mode = "floating" if current_layout == "floating" else "tiling"
+    target_mode = "tiling" if mode == "floating" else "floating"
+    toggle_action = {
+        "title": f"Set layout: {target_mode}",
+        "subtitle": f"Switch from {mode}",
+        "arg": f"{window_id} {target_mode}",
+        "autocomplete": target_mode,
+    }
 
     options = _ordered_layout_options(current_layout)
     for layout in options:
@@ -145,7 +139,7 @@ def main() -> None:
         action = {
             "title": f"Set layout: {layout}",
             "subtitle": f"Current: {current_layout}" if current_layout else "",
-            "arg": layout,
+            "arg": f"{window_id} {layout}",
             "autocomplete": layout,
         }
         if filter_query:
@@ -154,9 +148,8 @@ def main() -> None:
                 continue
         layout_actions.append(action)
 
-    if toggle_action:
-        if not filter_query or filter_query in toggle_action["title"].lower():
-            layout_actions.append(toggle_action)
+    if filter_query in toggle_action["title"].lower():
+        layout_actions.append(toggle_action)
 
     if layout_actions:
         items.extend(layout_actions)

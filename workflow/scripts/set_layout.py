@@ -9,13 +9,12 @@ from lib.aerospace import notify_error, set_layout
 
 
 def main() -> None:
-    layout = sys.argv[1] if len(sys.argv) > 1 else ""
-    if not layout:
-        layout = sys.stdin.read().strip()
-    if not layout:
+    selection = sys.argv[1] if len(sys.argv) > 1 else sys.stdin.read().strip()
+    if not selection:
         return
     try:
-        set_layout(layout)
+        window_id, layout = selection.split()
+        set_layout(int(window_id), layout)
     except Exception as exc:  # pylint: disable=broad-except
         notify_error(str(exc))
         print(str(exc))
